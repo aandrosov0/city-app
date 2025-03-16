@@ -1,0 +1,27 @@
+[versions]
+kotlin = "2.1.10"
+android = "8.8.2"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+
+[libraries]
+compose-bom = { module = "androidx.compose:compose-bom", version = "2025.03.00" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-activity = { module = "androidx.activity:activity-compose", version = "1.10.1" }
+compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.7" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version = "2.8.9" }
+compose-koin-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version = "4.0.2" }
+compose-coil = { module = "io.coil-kt.coil3:coil-compose", version = "3.1.0" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.10.0" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }

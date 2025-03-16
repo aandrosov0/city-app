@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Мой Город</string>
+    <string name="onboarding">Onboarding</string>
+    <string name="next">Дальше</string>
+    <string name="onboarding_1_title">Знакомьтесь - Мой Город</string>
+    <string name="onboarding_2_title">Самые актуальные Новости</string>
+    <string name="onboarding_3_title">Афиша, скидки, купоны</string>
+    <string name="onboarding_1_body">Ваш первый источник информации о вашем городе.</string>
+    <string name="onboarding_2_body">О вашем городе теперь в одном приложении.</string>
+    <string name="onboarding_3_body">Мероприятия, развлечения, где сэкономить - все в одном приложении.</string>
+    <string name="login_screen_headline">Привет!</string>
+    <string name="login_screen_subheadline">Выбери город, в котором находишься:</string>
+    <string name="im_here">Я здесь</string>
+    <string name="news">Новости</string>
+    <string name="events">Афиша</string>
+    <string name="tickets">Купоны</string>
+    <string name="menu">Меню</string>
+</resources>
