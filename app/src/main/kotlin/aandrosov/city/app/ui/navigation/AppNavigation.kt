@@ -1,6 +1,10 @@
 package aandrosov.city.app.ui.navigation
 
-import aandrosov.city.app.ui.screens.*
+import aandrosov.city.app.ui.screens.ArticleScreen
+import aandrosov.city.app.ui.screens.HomeScreen
+import aandrosov.city.app.ui.screens.LoginScreen
+import aandrosov.city.app.ui.screens.OnboardingScreen
+import aandrosov.city.app.ui.screens.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -21,6 +25,9 @@ data object Login
 @Serializable
 data object Home
 
+@Serializable
+data class Article(val id: Long)
+
 @Composable
 fun AppNavigation(
     navController: NavHostController,
@@ -28,13 +35,14 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home,
+        startDestination = Login,
         modifier = modifier
     ) {
         composable<Splash> { SplashScreen(navController::navigateInApp) }
         composable<Onboarding> { OnboardingScreen(navController::navigateInApp) }
         composable<Login> { LoginScreen(navController::navigateInApp) }
-        composable<Home> { HomeScreen() }
+        composable<Home> { HomeScreen(rootNavController = navController) }
+        composable<Article> { ArticleScreen(navController::navigateUp) }
     }
 }
 

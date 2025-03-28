@@ -16,4 +16,6 @@
     <string name="events">Афиша</string>
     <string name="tickets">Купоны</string>
     <string name="menu">Меню</string>
+    <string name="back_button">Назад</string>
+    <string name="all_category">Все</string>
 </resources>

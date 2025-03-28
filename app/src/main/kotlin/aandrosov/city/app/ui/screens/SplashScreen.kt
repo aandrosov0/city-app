@@ -29,7 +29,7 @@ internal fun SplashScreen(
     modifier: Modifier = Modifier
 ) {
     LaunchedEffect(Unit) {
-        delay(5.seconds)
+        delay(2.seconds)
         onNavigate(Onboarding)
     }
 

@@ -22,6 +22,7 @@ data object Menu
 
 @Composable
 fun HomeNavigation(
+    rootNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -30,7 +31,7 @@ fun HomeNavigation(
         startDestination = News,
         modifier = modifier
     ) {
-        composable<News> { NewsScreen() }
+        composable<News> { NewsScreen(rootNavController::navigate) }
         composable<Tickets> {  }
         composable<Events> {  }
         composable<Menu> {  }

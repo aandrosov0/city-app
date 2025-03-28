@@ -21,7 +21,15 @@ compose-navigation = { module = "androidx.navigation:navigation-compose", versio
 compose-koin-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version = "4.0.2" }
 compose-coil = { module = "io.coil-kt.coil3:coil-compose", version = "3.1.0" }
 
+coil-network = { module = "io.coil-kt.coil3:coil-network-okhttp", version = "3.1.0" }
+
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.10.0" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
+
+commonmark = { module = "org.commonmark:commonmark", version = "0.24.0" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version = "3.1.1" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version = "3.1.1" }
+
+koin-core = { module = "io.insert-koin:koin-core", version = "4.0.2" }

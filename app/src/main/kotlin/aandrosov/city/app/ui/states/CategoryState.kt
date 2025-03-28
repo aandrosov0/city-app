@@ -1,6 +1,6 @@
 package aandrosov.city.app.ui.states
 
-data class CityState(
+data class CategoryState(
     val id: Long = 0,
     val title: String = ""
 ) {

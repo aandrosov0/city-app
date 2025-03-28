@@ -39,7 +39,7 @@ android {
 
 configurations.all {
     resolutionStrategy {
-        force("androidx.core:core-ktx:1.13.0")
+        force("androidx.core:core-ktx:1.13.1")
     }
 }
 
@@ -56,8 +56,12 @@ dependencies {
     implementation(libs.compose.koin.navigation)
     implementation(libs.compose.coil)
 
+    implementation(libs.coil.network)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
 
     implementation(libs.serialization.json)
+
+    implementation(project(":data"))
 }

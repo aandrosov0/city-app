@@ -1,20 +1,14 @@
 package aandrosov.city.app.ui.states
 
-import aandrosov.city.data.models.NewsModel
-import java.time.LocalDateTime
+import java.time.Instant
+import java.util.Date
 
 data class NewsState(
+    val id: Long = 0,
     val cityId: Long = 0,
     val categoryId: Long = 0,
     val title: String = "",
     val imageUrl: String = "",
-    val publishedAt: LocalDateTime = LocalDateTime.now(),
-)
+    val publishedAt: Date = Date.from(Instant.now())
 
-fun NewsModel.toState() = NewsState(
-    cityId = cityId,
-    categoryId = categoryId,
-    title = title,
-    imageUrl = imageUrl,
-    publishedAt = publishedAt
 )
