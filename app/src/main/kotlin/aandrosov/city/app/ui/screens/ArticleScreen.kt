@@ -84,7 +84,7 @@ private fun Headline(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = text,
+        text = AnnotatedString.fromHtml(text),
         modifier = modifier,
         color = MaterialTheme.colorScheme.primary,
         textAlign = TextAlign.Center,
@@ -98,7 +98,7 @@ private fun Subheadline(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = text,
+        text = AnnotatedString.fromHtml(text),
         modifier = modifier.padding(top = 8.dp),
         color = MaterialTheme.colorScheme.primary,
         style = MaterialTheme.typography.titleSmall
@@ -110,6 +110,7 @@ private fun Paragraph(
     text: String,
     modifier: Modifier = Modifier
 ) {
+    println(text)
     Text(
         text = AnnotatedString.fromHtml(text),
         modifier = modifier.padding(top = 16.dp),
@@ -145,7 +146,7 @@ private fun Caption(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = text,
+        text = AnnotatedString.fromHtml(text),
         modifier = modifier,
         color = Color.Gray,
         textAlign = TextAlign.Justify,
@@ -169,7 +170,7 @@ private fun SubheadlinePreview() = AppTheme {
 @Composable
 private fun ParagraphPreview() = AppTheme {
     val text = """
-        Non aut omnis sunt perferendis sit. Distinctio possimus nihil nihil exercitationem sit ratione. 
+        Non aut <b>omnis</b> sunt perferendis sit. Distinctio possimus nihil nihil exercitationem sit ratione. 
         Sapiente voluptas ea sit minus. Dolores molestias corporis aut adipisci blanditiis
     """.trimIndent()
     Paragraph(text)

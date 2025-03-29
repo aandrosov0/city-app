@@ -44,6 +44,7 @@ class NewsViewModel(
                 .get()
                 .await()
                 .toObjects<NewsState>()
+            println(news)
 
             val categories = newsCategoriesRef
                 .get()

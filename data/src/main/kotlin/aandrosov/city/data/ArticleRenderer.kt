@@ -9,10 +9,12 @@ import org.commonmark.node.AbstractVisitor
 import org.commonmark.node.Heading
 import org.commonmark.node.Image
 import org.commonmark.node.Node
+import org.commonmark.node.Paragraph
+import org.commonmark.node.StrongEmphasis
 import org.commonmark.node.Text
 
 internal class ArticleRenderer {
-    class Visitor(private val onAppendBlock: (ArticleBlockModel) -> Unit) : AbstractVisitor() {
+    class DocumentVisitor(private val onAppendBlock: (ArticleBlockModel) -> Unit) : AbstractVisitor() {
         override fun visit(heading: Heading?) {
             heading?.let {
                 val level = heading.level
@@ -22,14 +24,39 @@ internal class ArticleRenderer {
                     3 -> ArticleSubheadlineModel(text)
                     else -> throw IllegalArgumentException("Header level $level isn't applicable")
                 }
-                println(block)
                 onAppendBlock(block)
             }
         }
 
+        override fun visit(paragraph: Paragraph?) {
+            val paragraphVisitor = ParagraphVisitor(onAppendBlock)
+            paragraph?.accept(paragraphVisitor)
+        }
+    }
+
+    private class ParagraphVisitor(private val onAppendBlock: (ArticleBlockModel) -> Unit) : AbstractVisitor() {
+        private val stringBuilder = StringBuilder()
+
+        override fun visit(paragraph: Paragraph?) {
+            visitChildren(paragraph)
+
+            if (stringBuilder.isNotBlank()) {
+                onAppendBlock(
+                    ArticleParagraphModel(
+                        stringBuilder.toString()
+                    )
+                )
+            }
+        }
+
         override fun visit(image: Image?) {
+            onAppendBlock(
+                ArticleParagraphModel(
+                    stringBuilder.toString()
+                )
+            )
+            stringBuilder.clear()
             image?.let {
-                println(image)
                 onAppendBlock(
                     ArticleThumbnailModel(
                         url = it.destination,
@@ -39,18 +66,22 @@ internal class ArticleRenderer {
             }
         }
 
+        override fun visit(strongEmphasis: StrongEmphasis?) {
+            stringBuilder.append("<b>")
+            strongEmphasis?.firstChild?.accept(this)
+            stringBuilder.append("</b>")
+        }
+
         override fun visit(text: Text?) {
-            text?.let {
-                println(text)
-                onAppendBlock(ArticleParagraphModel(text.literal))
-            }
+            stringBuilder.append(text?.literal ?: "")
         }
     }
 
     fun render(document: Node): List<ArticleBlockModel> {
         val blocks = mutableListOf<ArticleBlockModel>()
-        val visitor = Visitor(blocks::add)
-        document.accept(visitor)
+        val documentVisitor = DocumentVisitor(blocks::add)
+        println(blocks)
+        document.accept(documentVisitor)
         return blocks
     }
 }
