@@ -50,11 +50,13 @@ internal class ArticleRenderer {
         }
 
         override fun visit(image: Image?) {
-            onAppendBlock(
-                ArticleParagraphModel(
-                    stringBuilder.toString()
+            if (stringBuilder.isNotBlank()) {
+                onAppendBlock(
+                    ArticleParagraphModel(
+                        stringBuilder.toString()
+                    )
                 )
-            )
+            }
             stringBuilder.clear()
             image?.let {
                 onAppendBlock(
@@ -80,7 +82,6 @@ internal class ArticleRenderer {
     fun render(document: Node): List<ArticleBlockModel> {
         val blocks = mutableListOf<ArticleBlockModel>()
         val documentVisitor = DocumentVisitor(blocks::add)
-        println(blocks)
         document.accept(documentVisitor)
         return blocks
     }

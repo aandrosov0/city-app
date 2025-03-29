@@ -110,7 +110,6 @@ private fun Paragraph(
     text: String,
     modifier: Modifier = Modifier
 ) {
-    println(text)
     Text(
         text = AnnotatedString.fromHtml(text),
         modifier = modifier.padding(top = 16.dp),
