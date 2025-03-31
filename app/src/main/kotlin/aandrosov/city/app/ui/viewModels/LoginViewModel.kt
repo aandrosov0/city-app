@@ -2,7 +2,6 @@ package aandrosov.city.app.ui.viewModels
 
 import aandrosov.city.app.ui.states.CityState
 import aandrosov.city.app.ui.states.LoginScreenState
-import aandrosov.city.data.repositories.SettingsRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
@@ -17,8 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class LoginViewModel(
+    private val appViewModel: AppViewModel,
     firebase: FirebaseFirestore = Firebase.firestore,
-    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginScreenState())
     val uiState = _uiState.asStateFlow()
@@ -36,11 +35,7 @@ class LoginViewModel(
         }
     }
 
-    fun selectCity(city: CityState) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            settingsRepository.saveAll(settingsRepository.get().copy(cityId = city.id))
-            _uiState.value = _uiState.value.copy(selectedCity = city, isLoading = false)
-        }
+    fun selectCity(id: Long) {
+        appViewModel.updateSettings(cityId = id)
     }
 }

@@ -2,7 +2,6 @@ package aandrosov.city.app.ui.screens
 
 import aandrosov.city.app.R
 import aandrosov.city.app.ui.components.DropdownTextField
-import aandrosov.city.app.ui.navigation.Home
 import aandrosov.city.app.ui.states.CityState
 import aandrosov.city.app.ui.viewModels.LoginViewModel
 import androidx.compose.foundation.background
@@ -22,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,12 +32,13 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LoginScreen(
-    onNavigate: (Any) -> Unit,
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = koinViewModel()
 ) {
     LaunchedEffect(Unit) { loginViewModel.fetch() }
     val uiState by loginViewModel.uiState.collectAsState()
+    var selectedCity by remember { mutableStateOf<CityState?>(null) }
+    LaunchedEffect(uiState.cities) { selectedCity = uiState.cities.firstOrNull() }
 
     Scaffold { innerPadding ->
         Box {
@@ -57,16 +60,16 @@ internal fun LoginScreen(
                 )
                 Spacer(Modifier.height(70.dp))
                 DropdownTextField(
-                    current = uiState.selectedCity ?: CityState(),
+                    current = selectedCity ?: CityState(),
                     elements = uiState.cities,
-                    onElementSelect = { loginViewModel.selectCity(it) },
+                    onElementSelect = { selectedCity = it },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.weight(1f))
                 NextButton(
-                    onClick = { onNavigate(Home) },
+                    onClick = { loginViewModel.selectCity(selectedCity!!.id) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !uiState.isLoading && uiState.selectedCity != null
+                    enabled = !uiState.isLoading && selectedCity != null
                 )
             }
             if (uiState.isLoading) {

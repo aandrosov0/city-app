@@ -3,6 +3,7 @@ package aandrosov.city.app.ui.screens
 import aandrosov.city.app.R
 import aandrosov.city.app.ui.navigation.Onboarding
 import aandrosov.city.app.ui.themes.AppTheme
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun SplashScreen(
     onNavigate: (Any) -> Unit,
@@ -33,6 +36,7 @@ internal fun SplashScreen(
         onNavigate(Onboarding)
     }
 
+    Scaffold {  }
     Box(
         modifier
             .fillMaxSize()

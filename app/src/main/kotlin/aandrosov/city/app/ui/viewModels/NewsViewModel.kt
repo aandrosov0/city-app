@@ -3,7 +3,6 @@ package aandrosov.city.app.ui.viewModels
 import aandrosov.city.app.ui.states.CategoryState
 import aandrosov.city.app.ui.states.NewsScreenState
 import aandrosov.city.app.ui.states.NewsState
-import aandrosov.city.data.repositories.SettingsRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
@@ -19,8 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class NewsViewModel(
+    private val appViewModel: AppViewModel,
     private val firestore: FirebaseFirestore = Firebase.firestore,
-    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewsScreenState())
     val uiState = _uiState.asStateFlow()
@@ -29,12 +28,20 @@ class NewsViewModel(
 
     private var fetchingJob: Job? = null
 
-    fun fetch(categoryId: Long? = null) {
+    private var cityId: Long = 0
+    init {
+        viewModelScope.launch {
+            appViewModel.uiState.collect {
+                cityId = it.settings.cityId
+            }
+        }
+    }
+
+    fun fetchNews(categoryId: Long? = null) {
         fetchingJob?.cancel()
         fetchingJob = viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
-            val cityId = settingsRepository.get().cityId
             val newsRef = firestore.collection("cities/$cityId/news")
 
             val query = categoryId?.let { newsRef.whereEqualTo("categoryId", it) } ?: newsRef

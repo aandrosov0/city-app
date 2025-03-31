@@ -35,12 +35,12 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Login,
+        startDestination = Splash,
         modifier = modifier
     ) {
         composable<Splash> { SplashScreen(navController::navigateInApp) }
         composable<Onboarding> { OnboardingScreen(navController::navigateInApp) }
-        composable<Login> { LoginScreen(navController::navigateInApp) }
+        composable<Login> { LoginScreen() }
         composable<Home> { HomeScreen(rootNavController = navController) }
         composable<Article> { ArticleScreen(navController::navigateUp) }
     }
@@ -48,5 +48,5 @@ fun AppNavigation(
 
 private fun NavController.navigateInApp(route: Any) {
     popBackStack()
-    navigate(route)
+    navigate(route) { launchSingleTop = true }
 }

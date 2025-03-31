@@ -18,4 +18,6 @@
     <string name="menu">Меню</string>
     <string name="back_button">Назад</string>
     <string name="all_category">Все</string>
+    <string name="buy_event_button">Купить биллеты</string>
+    <string name="buy_tickets_button">Купить купон</string>
 </resources>

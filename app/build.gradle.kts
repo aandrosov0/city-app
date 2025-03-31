@@ -63,5 +63,7 @@ dependencies {
 
     implementation(libs.serialization.json)
 
+    implementation(libs.preferences)
+
     implementation(project(":data"))
 }

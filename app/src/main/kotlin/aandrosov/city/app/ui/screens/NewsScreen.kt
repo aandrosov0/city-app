@@ -1,6 +1,7 @@
 package aandrosov.city.app.ui.screens
 
 import aandrosov.city.app.R
+import aandrosov.city.app.ui.components.AdvertisingBanner
 import aandrosov.city.app.ui.components.RowSelector
 import aandrosov.city.app.ui.navigation.Article
 import aandrosov.city.app.ui.states.CategoryState
@@ -21,7 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +64,7 @@ internal fun NewsScreen(
 
     LaunchedEffect(currentCategory) {
         val category = if (currentCategory == allCategory) null else currentCategory
-        newsViewModel.fetch(category?.id)
+        newsViewModel.fetchNews(category?.id)
     }
 
     val categories = uiState.categories.toMutableList().also { it.add(0, allCategory) }
@@ -89,7 +90,14 @@ internal fun NewsScreen(
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(uiState.news) { news ->
+                        itemsIndexed(uiState.news) { index, news ->
+                            if (index % 5 == 0) {
+                                AdvertisingBanner(
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp)
+                                )
+                            }
                             NewsCard(
                                 image = rememberAsyncImagePainter(news.imageUrl),
                                 title = news.title,

@@ -1,6 +1,8 @@
 package aandrosov.city.app.ui.navigation
 
+import aandrosov.city.app.ui.screens.EventsScreen
 import aandrosov.city.app.ui.screens.NewsScreen
+import aandrosov.city.app.ui.screens.TicketsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -32,8 +34,8 @@ fun HomeNavigation(
         modifier = modifier
     ) {
         composable<News> { NewsScreen(rootNavController::navigate) }
-        composable<Tickets> {  }
-        composable<Events> {  }
+        composable<Tickets> { TicketsScreen() }
+        composable<Events> { EventsScreen() }
         composable<Menu> {  }
     }
 }

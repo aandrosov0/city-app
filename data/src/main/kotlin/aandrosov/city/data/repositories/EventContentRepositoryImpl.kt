@@ -1,7 +1,7 @@
 package aandrosov.city.data.repositories
 
 import aandrosov.city.data.ArticleRenderer
-import aandrosov.city.data.models.ArticleContentModel
+import aandrosov.city.data.models.ArticleBlockModel
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -10,24 +10,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.commonmark.parser.Parser
 
-class ArticleRepositoryImpl(
+class EventContentRepositoryImpl(
     private val httpClient: HttpClient,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ArticleRepository {
+) : EventContentRepository {
     companion object {
-        private const val ARTICLES_URL = "https://raw.githubusercontent.com/aandrosov0/city-app-contents/master/city-%s/articles/%s.md"
+        private const val EVENTS_URL = "https://raw.githubusercontent.com/aandrosov0/city-app-contents/master/city-%s/events/%s.md"
     }
 
-    override suspend fun getById(cityId: Long, articleId: Long): ArticleContentModel = withContext(dispatcher) {
-        val response = httpClient.get(ARTICLES_URL.format(cityId, articleId))
+    override suspend fun getById(
+        cityId: Long,
+        eventId: Long
+    ): List<ArticleBlockModel> = withContext(dispatcher) {
+        val response = httpClient.get(EVENTS_URL.format(cityId, eventId))
         val body = response.bodyAsText()
 
         val markdownParser = Parser.builder().build()
         val document = markdownParser.parse(body)
         val articleRenderer = ArticleRenderer()
-        ArticleContentModel(
-            id = articleId,
-            content = articleRenderer.render(document)
-        )
+        articleRenderer.render(document)
     }
 }
