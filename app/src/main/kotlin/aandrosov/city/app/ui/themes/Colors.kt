@@ -19,3 +19,9 @@ internal val backgroundColor
 
 internal val onBackgroundColor
     get() = Color.Black
+
+internal val darkBackgroundColor
+    get() = Color.Black
+
+internal val onDarkBackgroundColor
+    get() = Color.White

@@ -38,10 +38,10 @@ fun AppNavigation(
         startDestination = Splash,
         modifier = modifier
     ) {
-        composable<Splash> { SplashScreen(navController::navigateInApp) }
+        composable<Splash> { SplashScreen() }
         composable<Onboarding> { OnboardingScreen(navController::navigateInApp) }
         composable<Login> { LoginScreen() }
-        composable<Home> { HomeScreen(rootNavController = navController) }
+        composable<Home> { HomeScreen(navController::navigate) }
         composable<Article> { ArticleScreen(navController::navigateUp) }
     }
 }

@@ -2,7 +2,9 @@ package aandrosov.city.app.ui
 
 import aandrosov.city.app.ui.navigation.AppNavigation
 import aandrosov.city.app.ui.navigation.Home
+import aandrosov.city.app.ui.navigation.Onboarding
 import aandrosov.city.app.ui.navigation.Splash
+import aandrosov.city.app.ui.screens.OnboardingScreen
 import aandrosov.city.app.ui.themes.AppTheme
 import aandrosov.city.app.ui.viewModels.AppViewModel
 import aandrosov.city.data.dataModule
@@ -33,15 +35,18 @@ fun App() {
             if (isAuthorized) {
                 navController.navigateInApp(Home)
             } else {
-                navController.navigateInApp(Splash)
+                navController.navigateInApp(Onboarding)
             }
         }
 
-        AppTheme { AppNavigation(navController) }
+        AppTheme(isDarkModeEnabled = uiState.settings.isDarkModeEnabled) {
+            AppNavigation(navController)
+        }
     }
 }
 
 fun NavController.navigateInApp(route: Any) {
+    popBackStack()
     navigate(route) {
         popUpTo(route) { inclusive = true }
     }

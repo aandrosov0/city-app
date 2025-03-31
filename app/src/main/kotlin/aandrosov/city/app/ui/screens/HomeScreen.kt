@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,7 +56,7 @@ data class TopLevelRoute(
 
 @Composable
 fun HomeScreen(
-    rootNavController: NavHostController,
+    onRootNavigate: (Any) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -74,7 +76,10 @@ fun HomeScreen(
                 ),
                 onRouteSelect = {
                     navController.navigate(it.route) {
-                        popUpTo<News>()
+                        popUpTo<News>() {
+                            inclusive = true
+                            saveState = true
+                        }
                         launchSingleTop = true
                     }
                 }
@@ -82,8 +87,8 @@ fun HomeScreen(
         }
     ) { innerPadding ->
         HomeNavigation(
-            rootNavController = rootNavController,
             navController = navController,
+            onRootNavigate = onRootNavigate,
             modifier = Modifier
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding)
@@ -99,8 +104,9 @@ private fun HomeTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .statusBarsPadding()
-            .background(MaterialTheme.colorScheme.background),
+            .shadow(8.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -135,10 +141,11 @@ private fun HomeNavigationBar(
 ) {
     Row(
         modifier = modifier
+            .shadow(8.dp)
             .background(MaterialTheme.colorScheme.background)
             .padding(10.dp)
             .fillMaxWidth()
-            .padding(WindowInsets.navigationBars.asPaddingValues()),
+            .navigationBarsPadding(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         routes.forEach { route ->

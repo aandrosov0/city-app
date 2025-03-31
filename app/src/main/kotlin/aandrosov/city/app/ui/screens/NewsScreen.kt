@@ -74,6 +74,7 @@ internal fun NewsScreen(
             Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(top = 8.dp)
         ) {
             if (!uiState.isLoading) {
                 Column(Modifier.fillMaxSize()) {

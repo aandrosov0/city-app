@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,36 +27,55 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
+
+data class DropdownTextFieldColors(
+    val borderColor: Color,
+    val contentColor: Color,
+)
+
+object DropdownTextFieldDefaults {
+
+    @Composable
+    fun colors(
+        borderColor: Color = MaterialTheme.colorScheme.secondary,
+        contentColor: Color = MaterialTheme.colorScheme.secondary,
+    ) = DropdownTextFieldColors(
+        borderColor = borderColor,
+        contentColor = contentColor
+    )
+}
 
 @Composable
 fun <T: Any> DropdownTextField(
     current: T,
     elements: List<T>,
     onElementSelect: (T) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    colors: DropdownTextFieldColors = DropdownTextFieldDefaults.colors(),
+    contentPadding: PaddingValues = PaddingValues(14.dp, 16.dp)
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     val borderSize = 1.dp
     val borderShape = MaterialTheme.shapes.small
-    val borderColor = MaterialTheme.colorScheme.secondary
-
     Box(modifier.width(240.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(borderSize, borderColor, borderShape)
+                .border(borderSize, colors.borderColor, borderShape)
                 .clickable { expanded = true },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.secondary) {
+            CompositionLocalProvider(LocalContentColor provides colors.contentColor) {
                 Text(
                     text = "$current",
-                    modifier = Modifier.padding(14.dp, 16.dp),
+                    modifier = Modifier.padding(contentPadding),
                     style = MaterialTheme.typography.labelLarge
                 )
                 val rotation by animateFloatAsState(if (!expanded) 0f else 180f)
@@ -64,7 +84,7 @@ fun <T: Any> DropdownTextField(
                     contentDescription = null,
                     modifier = Modifier
                         .rotate(rotation)
-                        .padding(horizontal = 14.dp)
+                        .padding(start = 4.dp, end = 14.dp)
                 )
             }
         }
@@ -75,7 +95,12 @@ fun <T: Any> DropdownTextField(
         ) {
             elements.forEach { element ->
                 DropdownMenuItem(
-                    text = { Text("$element") },
+                    text = {
+                        Text(
+                            text = "$element",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
                     onClick = {
                         onElementSelect(element)
                         expanded = false

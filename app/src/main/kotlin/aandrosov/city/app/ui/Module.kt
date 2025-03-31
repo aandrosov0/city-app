@@ -4,6 +4,7 @@ import aandrosov.city.app.ui.viewModels.AppViewModel
 import aandrosov.city.app.ui.viewModels.ArticleViewModel
 import aandrosov.city.app.ui.viewModels.EventsViewModel
 import aandrosov.city.app.ui.viewModels.LoginViewModel
+import aandrosov.city.app.ui.viewModels.MenuViewModel
 import aandrosov.city.app.ui.viewModels.NewsViewModel
 import aandrosov.city.app.ui.viewModels.TicketsViewModel
 import androidx.preference.PreferenceManager
@@ -22,4 +23,5 @@ val appModule = module {
     viewModel { NewsViewModel(get()) }
     viewModel { EventsViewModel(get(), get()) }
     viewModel { TicketsViewModel(get(), get()) }
+    viewModel { MenuViewModel(get()) }
 }

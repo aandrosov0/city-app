@@ -96,10 +96,12 @@ internal fun OnboardingScreen(
         ) {
             Text(
                 text = currentPage.title,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = currentPage.body,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(Modifier.weight(1f))

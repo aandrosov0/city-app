@@ -20,4 +20,12 @@
     <string name="all_category">Все</string>
     <string name="buy_event_button">Купить биллеты</string>
     <string name="buy_tickets_button">Купить купон</string>
+    <string name="settings_menu_button">Настройки</string>
+    <string name="about_menu_button">О приложении</string>
+    <string name="logout_menu_button">Выйти</string>
+    <string name="functions_section_menu_title">Больше функций</string>
+    <string name="weather_menu_button">Погода</string>
+    <string name="bot_menu_button">Ассистент</string>
+    <string name="dark_mode_menu_switch">Темная тема</string>
+    <string name="city_menu_drop_down_text_field">Ваш город</string>
 </resources>

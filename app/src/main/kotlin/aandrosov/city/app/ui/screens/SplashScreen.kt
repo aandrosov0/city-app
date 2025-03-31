@@ -1,7 +1,6 @@
 package aandrosov.city.app.ui.screens
 
 import aandrosov.city.app.R
-import aandrosov.city.app.ui.navigation.Onboarding
 import aandrosov.city.app.ui.themes.AppTheme
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -15,27 +14,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-internal fun SplashScreen(
-    onNavigate: (Any) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LaunchedEffect(Unit) {
-        delay(2.seconds)
-        onNavigate(Onboarding)
-    }
-
+internal fun SplashScreen(modifier: Modifier = Modifier) {
     Scaffold {  }
     Box(
         modifier
@@ -65,7 +53,8 @@ private fun AppLogo(modifier: Modifier = Modifier) {
         )
         Text(
             text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineMedium
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.headlineMedium,
         )
     }
 }
@@ -73,5 +62,5 @@ private fun AppLogo(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun SplashScreenPreview() = AppTheme {
-    SplashScreen(onNavigate = {})
+    SplashScreen()
 }
