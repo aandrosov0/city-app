@@ -7,6 +7,7 @@ import aandrosov.city.app.ui.viewModels.LoginViewModel
 import aandrosov.city.app.ui.viewModels.MenuViewModel
 import aandrosov.city.app.ui.viewModels.NewsViewModel
 import aandrosov.city.app.ui.viewModels.TicketsViewModel
+import aandrosov.city.app.ui.viewModels.WeatherViewModel
 import androidx.preference.PreferenceManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.*
@@ -18,6 +19,7 @@ val appModule = module {
 
     viewModelOf(::NewsViewModel)
     viewModelOf(::ArticleViewModel)
+    viewModelOf(::WeatherViewModel)
 
     viewModel { LoginViewModel(get()) }
     viewModel { NewsViewModel(get()) }

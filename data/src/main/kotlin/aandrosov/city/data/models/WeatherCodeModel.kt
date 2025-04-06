@@ -1,0 +1,36 @@
+package aandrosov.city.data.models
+
+import aandrosov.city.data.serializers.WeatherCodeSerializer
+import kotlinx.serialization.Serializable
+
+@Serializable(with = WeatherCodeSerializer::class)
+enum class WeatherCodeModel(val code: Byte) {
+    CLEAR_SKY(0),
+    MAINLY_CLEAR(1),
+    PARTLY_CLOUDY(2),
+    OVERCAST(3),
+    FOG(45),
+    DEPOSITING_RIME_FOG(48),
+    DRIZZLE_LIGHT(51),
+    DRIZZLE_MODERATE(53),
+    DRIZZLE_DENSE_INTENSITY(55),
+    FREEZING_DRIZZLE_LIGHT(56),
+    FREEZING_DRIZZLE_DENSE_INTENSITY(57),
+    RAIN_SLIGHTLY(61),
+    RAIN_MODERATE(63),
+    RAIN_HEAVY_INTENSITY(65),
+    FREEZING_RAIN_LIGHT(66),
+    FREEZING_RAIN_HEAVY_INTENSITY(66),
+    SNOW_FALL_LIGHT(71),
+    SNOW_FALL_MODERATE(73),
+    SNOW_FALL_HEAVY_INTENSITY(75),
+    SNOW_GRAINS(77),
+    RAIN_SHOWERS_LIGHT(80),
+    RAIN_SHOWERS_MODERATE(81),
+    RAIN_SHOWERS_VIOLENT(82),
+    SNOW_SHOWERS_SLIGHT(85),
+    SNOW_SHOWERS_HEAVY(86),
+    THUNDERSTORM(95),
+    THUNDERSTORM_SLIGHTLY(96),
+    THUNDERSTORM_HEAVY_HAIL(99),
+}

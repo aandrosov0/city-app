@@ -28,4 +28,15 @@
     <string name="bot_menu_button">Ассистент</string>
     <string name="dark_mode_menu_switch">Темная тема</string>
     <string name="city_menu_drop_down_text_field">Ваш город</string>
+    <string name="weather_screen_temperature_headline">%s°C</string>
+    <string name="weather_code_clear_sky">Ясно</string>
+    <string name="weather_code_mainly_clear">Преимущественно ясно</string>
+    <string name="weather_code_partly_cloudy">Частично облачно</string>
+    <string name="weather_code_overcast">Пасмурно</string>
+    <string name="weather_code_fog">Туман</string>
+    <string name="weather_code_drizzle">Моросящий дождь</string>
+    <string name="weather_code_rain">Дождь</string>
+    <string name="weather_code_snow_fall">Снег</string>
+    <string name="weather_code_snow_grains">Град</string>
+    <string name="weather_code_thunderstorm">Гроза</string>
 </resources>

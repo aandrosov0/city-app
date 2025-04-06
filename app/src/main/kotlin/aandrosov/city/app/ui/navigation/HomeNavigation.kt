@@ -6,7 +6,6 @@ import aandrosov.city.app.ui.screens.NewsScreen
 import aandrosov.city.app.ui.screens.TicketsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,6 +37,6 @@ fun HomeNavigation(
         composable<News> { NewsScreen(onRootNavigate) }
         composable<Tickets> { TicketsScreen() }
         composable<Events> { EventsScreen() }
-        composable<Menu> { MenuScreen() }
+        composable<Menu> { MenuScreen(onRootNavigate) }
     }
 }

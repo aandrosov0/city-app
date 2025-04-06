@@ -31,10 +31,12 @@ class AppViewModel(
     private val citiesRef = firebase.collection("cities")
     private val prefEditor = preferences.edit()
 
+    val onSharedPreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { pref, key ->
+        onSharedPreferencesChanged(pref)
+    }
+
     init {
-        preferences.registerOnSharedPreferenceChangeListener { preferences, _ ->
-            onSharedPreferencesChanged(preferences)
-        }
+        preferences.registerOnSharedPreferenceChangeListener(onSharedPreferencesChangeListener)
         onSharedPreferencesChanged(preferences)
         loadInternetData()
     }

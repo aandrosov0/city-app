@@ -3,6 +3,7 @@ package aandrosov.city.app.ui.screens
 import aandrosov.city.app.R
 import aandrosov.city.app.ui.components.DropdownTextField
 import aandrosov.city.app.ui.components.DropdownTextFieldDefaults
+import aandrosov.city.app.ui.navigation.Weather
 import aandrosov.city.app.ui.themes.AppTheme
 import aandrosov.city.app.ui.viewModels.MenuViewModel
 import androidx.compose.foundation.background
@@ -40,6 +41,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun MenuScreen(
+    onNavigate: (Any) -> Unit,
     modifier: Modifier = Modifier,
     menuViewModel: MenuViewModel = koinViewModel()
 ) {
@@ -54,14 +56,9 @@ internal fun MenuScreen(
         MenuButton(
             icon = painterResource(R.drawable.ic_weather),
             label = stringResource(R.string.weather_menu_button),
-            onClick = {}
+            onClick = { onNavigate(Weather) }
         )
         HorizontalDivider()
-        MenuButton(
-            icon = painterResource(R.drawable.ic_bot),
-            label = stringResource(R.string.bot_menu_button),
-            onClick = {}
-        )
         Spacer(Modifier.height(32.dp))
         MenuDropDownTextField(
             icon = painterResource(R.drawable.ic_apartment),
@@ -81,7 +78,7 @@ internal fun MenuScreen(
         MenuButton(
             icon = painterResource(R.drawable.ic_info),
             label = stringResource(R.string.about_menu_button),
-            onClick = {},
+            onClick = { },
         )
         HorizontalDivider()
         MenuButton(

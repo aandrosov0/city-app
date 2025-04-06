@@ -5,6 +5,7 @@ import aandrosov.city.app.ui.screens.HomeScreen
 import aandrosov.city.app.ui.screens.LoginScreen
 import aandrosov.city.app.ui.screens.OnboardingScreen
 import aandrosov.city.app.ui.screens.SplashScreen
+import aandrosov.city.app.ui.screens.WeatherScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -28,6 +29,9 @@ data object Home
 @Serializable
 data class Article(val id: Long)
 
+@Serializable
+data object Weather
+
 @Composable
 fun AppNavigation(
     navController: NavHostController,
@@ -43,6 +47,7 @@ fun AppNavigation(
         composable<Login> { LoginScreen() }
         composable<Home> { HomeScreen(navController::navigate) }
         composable<Article> { ArticleScreen(navController::navigateUp) }
+        composable<Weather> { WeatherScreen(navController::navigateUp) }
     }
 }
 

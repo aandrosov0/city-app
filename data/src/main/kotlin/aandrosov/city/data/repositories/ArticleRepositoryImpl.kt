@@ -25,6 +25,9 @@ class ArticleRepositoryImpl(
         val markdownParser = Parser.builder().build()
         val document = markdownParser.parse(body)
         val articleRenderer = ArticleRenderer()
+
+        println(ARTICLES_URL.format(cityId, articleId))
+
         ArticleContentModel(
             id = articleId,
             content = articleRenderer.render(document)
