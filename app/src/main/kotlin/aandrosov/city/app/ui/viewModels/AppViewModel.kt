@@ -68,7 +68,7 @@ class AppViewModel(
         )
     }
 
-    private fun loadInternetData() {
+    fun loadInternetData() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = uiState.value.copy(isLoading = false)
 

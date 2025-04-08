@@ -1,6 +1,7 @@
 package aandrosov.city.data.repositories
 
 import aandrosov.city.data.ArticleRenderer
+import aandrosov.city.data.exceptions.DataInternetException
 import aandrosov.city.data.models.ArticleBlockModel
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -8,6 +9,7 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import org.commonmark.parser.Parser
 
 class EventContentRepositoryImpl(
@@ -22,7 +24,12 @@ class EventContentRepositoryImpl(
         cityId: Long,
         eventId: Long
     ): List<ArticleBlockModel> = withContext(dispatcher) {
-        val response = httpClient.get(EVENTS_URL.format(cityId, eventId))
+        val response = try {
+            httpClient.get(EVENTS_URL.format(cityId, eventId))
+        } catch (_: IOException) {
+            throw DataInternetException()
+        }
+
         val body = response.bodyAsText()
 
         val markdownParser = Parser.builder().build()

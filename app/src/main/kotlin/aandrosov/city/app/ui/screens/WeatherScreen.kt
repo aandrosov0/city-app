@@ -2,6 +2,7 @@ package aandrosov.city.app.ui.screens
 
 import aandrosov.city.app.R
 import aandrosov.city.app.ui.components.BackTopBar
+import aandrosov.city.app.ui.components.ErrorView
 import aandrosov.city.app.ui.states.localizedName
 import aandrosov.city.app.ui.viewModels.WeatherViewModel
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,8 @@ internal fun WeatherScreen(
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator()
+            } else if (uiState.isError) {
+                ErrorView({ weatherViewModel.fetchForecast() })
             } else {
                 CompositionLocalProvider(
                     LocalContentColor provides MaterialTheme.colorScheme.primary

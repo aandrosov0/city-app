@@ -5,6 +5,7 @@ import aandrosov.city.app.ui.states.TicketContentState
 import aandrosov.city.app.ui.states.TicketState
 import aandrosov.city.app.ui.states.TicketsScreenState
 import aandrosov.city.app.ui.states.toState
+import aandrosov.city.data.exceptions.DataInternetException
 import aandrosov.city.data.repositories.TicketContentRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -59,13 +60,17 @@ class TicketsViewModel(
     fun fetchTicketContent(ticketId: Long, providerUrl: String) {
         viewModelScope.launch {
             _uiState.value = uiState.value.copy(isLoading = true, ticketContent = TicketContentState())
-            val content = ticketContentRepository.getById(cityId, ticketId).map { it.toState() }
-            val ticketContent = TicketContentState(
-                id = ticketId,
-                providerUrl = providerUrl,
-                content = content
-            )
-            _uiState.value = uiState.value.copy(isLoading = false, ticketContent = ticketContent)
+            try {
+                val content = ticketContentRepository.getById(cityId, ticketId).map { it.toState() }
+                val ticketContent = TicketContentState(
+                    id = ticketId,
+                    providerUrl = providerUrl,
+                    content = content
+                )
+                _uiState.value = uiState.value.copy(isLoading = false, ticketContent = ticketContent)
+            } catch (_: DataInternetException) {
+                _uiState.value = uiState.value.copy(isLoading = false, isError = true)
+            }
         }
     }
 }

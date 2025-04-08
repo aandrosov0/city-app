@@ -3,6 +3,7 @@ package aandrosov.city.app.ui.viewModels
 import aandrosov.city.app.ui.navigation.Article
 import aandrosov.city.app.ui.states.ArticleScreenState
 import aandrosov.city.app.ui.states.toState
+import aandrosov.city.data.exceptions.DataInternetException
 import aandrosov.city.data.repositories.ArticleRepository
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -34,8 +35,12 @@ class ArticleViewModel(
     fun fetch() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val article = articleRepository.getById(cityId, articleId).toState()
-            _uiState.value = ArticleScreenState(article = article)
+            try {
+                val article = articleRepository.getById(cityId, articleId).toState()
+                _uiState.value = ArticleScreenState(article = article)
+            } catch (_: DataInternetException) {
+                _uiState.value = uiState.value.copy(isLoading = false, isError = true)
+            }
         }
     }
 }

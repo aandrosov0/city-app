@@ -5,6 +5,7 @@ import aandrosov.city.app.ui.states.EventContentState
 import aandrosov.city.app.ui.states.EventScreenState
 import aandrosov.city.app.ui.states.EventState
 import aandrosov.city.app.ui.states.toState
+import aandrosov.city.data.exceptions.DataInternetException
 import aandrosov.city.data.repositories.EventContentRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -58,13 +59,17 @@ class EventsViewModel(
     fun fetchEventContent(eventId: Long, providerUrl: String) {
         viewModelScope.launch {
             _uiState.value = uiState.value.copy(isLoading = true, eventContent = EventContentState())
-            val content = eventContentRepository.getById(cityId, eventId).map { it.toState() }
-            val eventContent = EventContentState(
-                id = eventId,
-                providerUrl = providerUrl,
-                content = content
-            )
-            _uiState.value = uiState.value.copy(isLoading = false, eventContent = eventContent)
+            try {
+                val content = eventContentRepository.getById(cityId, eventId).map { it.toState() }
+                val eventContent = EventContentState(
+                    id = eventId,
+                    providerUrl = providerUrl,
+                    content = content
+                )
+                _uiState.value = uiState.value.copy(isLoading = false, eventContent = eventContent)
+            } catch (_: DataInternetException) {
+                _uiState.value = uiState.value.copy(isLoading = false, isError = true)
+            }
         }
     }
 }

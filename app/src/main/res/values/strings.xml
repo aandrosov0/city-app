@@ -39,4 +39,6 @@
     <string name="weather_code_snow_fall">Снег</string>
     <string name="weather_code_snow_grains">Град</string>
     <string name="weather_code_thunderstorm">Гроза</string>
+    <string name="action_retry">Перезагрузить</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
 </resources>
