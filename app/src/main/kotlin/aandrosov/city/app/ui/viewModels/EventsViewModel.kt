@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -29,6 +30,8 @@ class EventsViewModel(
 
     private val eventsCategories = firestore.collection("event_categories")
 
+    private var fetchingJob: Job? = null
+
     private var cityId = 0L
     init {
         viewModelScope.launch {
@@ -39,7 +42,8 @@ class EventsViewModel(
     }
 
     fun fetchEvents() {
-        viewModelScope.launch(Dispatchers.IO) {
+        fetchingJob?.cancel()
+        fetchingJob = viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = uiState.value.copy(isLoading = true)
             val categories = eventsCategories
                 .get()

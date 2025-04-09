@@ -29,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,7 +63,9 @@ internal fun TicketsScreen(
     val bottomSheetState = rememberModalBottomSheetState(true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    Box(
+    PullToRefreshBox(
+        isRefreshing = uiState.isLoading,
+        onRefresh = { ticketsViewModel.fetchTickets() },
         modifier = modifier.padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -89,7 +92,10 @@ internal fun TicketsScreen(
                                 thumbnail = rememberAsyncImagePainter(ticket.imageUrl),
                                 price = ticket.price,
                                 onClick = {
-                                    ticketsViewModel.fetchTicketContent(ticket.id, ticket.providerUrl)
+                                    ticketsViewModel.fetchTicketContent(
+                                        ticket.id,
+                                        ticket.providerUrl
+                                    )
                                     showBottomSheet = true
                                 }
                             )
@@ -98,10 +104,6 @@ internal fun TicketsScreen(
                     Spacer(Modifier.height(4.dp))
                 }
             }
-        }
-
-        if (uiState.isLoading) {
-            CircularProgressIndicator()
         }
 
         if (showBottomSheet) {

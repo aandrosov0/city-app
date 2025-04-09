@@ -10,7 +10,6 @@ import aandrosov.city.app.ui.viewModels.NewsViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,11 +22,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,6 +51,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NewsScreen(
     onNavigate: (Any) -> Unit,
@@ -62,57 +63,55 @@ internal fun NewsScreen(
     val allCategory = CategoryState(title = stringResource(R.string.all_category))
     var currentCategory by remember { mutableStateOf(allCategory) }
 
-    LaunchedEffect(currentCategory) {
-        val category = if (currentCategory == allCategory) null else currentCategory
-        newsViewModel.fetchNews(category?.id)
-    }
+    val category = if (currentCategory == allCategory) null else currentCategory
+
+    LaunchedEffect(currentCategory) { newsViewModel.fetchNews(category?.id) }
 
     val categories = uiState.categories.toMutableList().also { it.add(0, allCategory) }
 
     Scaffold(modifier) { innerPadding ->
-        Box(
-            Modifier
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoading,
+            onRefresh = {
+                newsViewModel.fetchNews(category?.id)
+            },
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(top = 8.dp)
         ) {
-            if (!uiState.isLoading) {
-                Column(Modifier.fillMaxSize()) {
-                    RowSelector(
-                        current = currentCategory,
-                        items = categories,
-                        onItemSelect = { currentCategory = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                    )
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        itemsIndexed(uiState.news) { index, news ->
-                            if (index % 5 == 0) {
-                                AdvertisingBanner(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 8.dp)
-                                )
-                            }
-                            NewsCard(
-                                image = rememberAsyncImagePainter(news.imageUrl),
-                                title = news.title,
-                                category = uiState.categories.find { it.id == news.categoryId }!!.title,
-                                publicationDate = news.publishedAt.toInstant(),
-                                onClick = { onNavigate(Article(news.id)) },
-                                modifier = Modifier.fillMaxWidth()
+            Column(Modifier.fillMaxSize()) {
+                RowSelector(
+                    current = currentCategory,
+                    items = categories,
+                    onItemSelect = { currentCategory = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    itemsIndexed(uiState.news) { index, news ->
+                        if (index % 5 == 0) {
+                            AdvertisingBanner(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
                             )
                         }
+                        NewsCard(
+                            image = rememberAsyncImagePainter(news.imageUrl),
+                            title = news.title,
+                            category = uiState.categories.find { it.id == news.categoryId }!!.title,
+                            publicationDate = news.publishedAt.toInstant(),
+                            onClick = { onNavigate(Article(news.id)) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
-            }
-            if (uiState.isLoading) {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
     }
