@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -26,7 +25,7 @@ import androidx.compose.ui.unit.dp
 fun <T> RowSelector(
     current: T,
     items: List<T>,
-    onItemSelect: (T) -> Unit,
+    onItemSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -36,11 +35,11 @@ fun <T> RowSelector(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items.forEach { item ->
+        items.forEachIndexed { index, item ->
             RowItem(
                 label = "$item",
                 selected = current == item,
-                onSelect = { onItemSelect(item) },
+                onSelect = { onItemSelect(index) },
             )
         }
     }

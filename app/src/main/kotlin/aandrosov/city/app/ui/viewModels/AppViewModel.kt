@@ -1,12 +1,12 @@
 package aandrosov.city.app.ui.viewModels
 
+import aandrosov.city.app.ui.AppMemoryStorage
+import aandrosov.city.app.ui.AppSettings
 import aandrosov.city.app.ui.states.AppState
 import aandrosov.city.app.ui.states.CityState
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.Dispatchers
@@ -15,56 +15,27 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class AppViewModel(
-    preferences: SharedPreferences,
-    firebase: FirebaseFirestore = Firebase.firestore,
-) : ViewModel() {
-    companion object {
-        private const val CITY_ID_KEY = "CITY_ID"
-        private const val DARK_MODE_KEY = "DARK_MODE"
-    }
+const val CITIES_MEMORY_KEY = "app_cities"
 
+class AppViewModel(
+    private val appSettings: AppSettings,
+    private val appMemoryStorage: AppMemoryStorage,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(AppState())
 
     val uiState = _uiState.asStateFlow()
 
-    private val citiesRef = firebase.collection("cities")
-    private val prefEditor = preferences.edit()
-
-    val onSharedPreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { pref, key ->
-        onSharedPreferencesChanged(pref)
-    }
+    private val citiesRef = Firebase.firestore.collection("cities")
 
     init {
-        preferences.registerOnSharedPreferenceChangeListener(onSharedPreferencesChangeListener)
-        onSharedPreferencesChanged(preferences)
+        appSettings.registerOnSettingsChangeListener(::onSettingsChanged)
         loadInternetData()
     }
 
-    fun updateSettings(
-        cityId: Long = _uiState.value.settings.cityId,
-        isDarkModeEnabled: Boolean = uiState.value.settings.isDarkModeEnabled
-    ) {
-        prefEditor
-            .putBoolean(DARK_MODE_KEY, isDarkModeEnabled)
-            .putLong(CITY_ID_KEY, cityId)
-            .apply()
-    }
-
-    fun quitAccount() {
-        updateSettings(cityId = 0)
-    }
-
-    private fun onSharedPreferencesChanged(preferences: SharedPreferences) {
-        val cityId = preferences.getLong(CITY_ID_KEY, 0)
-        val isDarkModeEnabled = preferences.getBoolean(DARK_MODE_KEY, false)
-
+    private fun onSettingsChanged() {
         _uiState.value = uiState.value.copy(
-            isAuthorized = cityId != 0L,
-            settings = _uiState.value.settings.copy(
-                cityId = cityId,
-                isDarkModeEnabled = isDarkModeEnabled
-            )
+            isAuthorized = appSettings.cityId != 0L,
+            isDarkModeEnabled = appSettings.isDarkModeEnabled
         )
     }
 
@@ -77,10 +48,13 @@ class AppViewModel(
                 .await()
                 .toObjects<CityState>()
 
-            _uiState.value = uiState.value.copy(
-                cities = cities,
-                isLoading = false
-            )
+            appMemoryStorage[CITIES_MEMORY_KEY] = cities
+
+            _uiState.value = uiState.value.copy(isLoading = false)
         }
+    }
+
+    override fun onCleared() {
+        appSettings.unregisterOnSettingsChangeListener(::onSettingsChanged)
     }
 }

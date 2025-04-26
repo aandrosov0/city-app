@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,14 +57,13 @@ internal fun TicketsScreen(
     ticketsViewModel: TicketsViewModel = koinViewModel()
 ) {
     val uiState by ticketsViewModel.uiState.collectAsState()
-    LaunchedEffect(Unit) { ticketsViewModel.fetchTickets() }
 
     val bottomSheetState = rememberModalBottomSheetState(true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
-        onRefresh = { ticketsViewModel.fetchTickets() },
+        onRefresh = ticketsViewModel::fetchTickets,
         modifier = modifier.padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {

@@ -9,6 +9,6 @@ data class NewsState(
     val categoryId: Long = 0,
     val title: String = "",
     val imageUrl: String = "",
-    val publishedAt: Date = Date.from(Instant.now())
-
+    val publishedAt: Date = Date.from(Instant.now()),
+    val isFavorite: Boolean = false,
 )

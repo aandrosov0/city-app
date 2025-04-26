@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -76,11 +77,7 @@ fun HomeScreen(
                 ),
                 onRouteSelect = {
                     navController.navigate(it.route) {
-                        popUpTo<News>() {
-                            inclusive = true
-                            saveState = true
-                        }
-                        launchSingleTop = true
+                        navController.popBackStack()
                     }
                 }
             )
@@ -149,10 +146,11 @@ private fun HomeNavigationBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         routes.forEach { route ->
+            val selected = current.hierarchy.any { it.hasRoute(route.route::class) }
             BottomNavigationItem(
                 icon = painterResource(route.icon),
                 label = stringResource(route.label),
-                selected = current.hierarchy.any { it.hasRoute(route.route::class) },
+                selected = selected,
                 onClick = { onRouteSelect(route) }
             )
         }
@@ -179,7 +177,8 @@ private fun BottomNavigationItem(
             .clickable(
                 interactionSource = null,
                 indication = ripple(),
-                onClick = onClick
+                onClick = onClick,
+                enabled = !selected
             ),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally

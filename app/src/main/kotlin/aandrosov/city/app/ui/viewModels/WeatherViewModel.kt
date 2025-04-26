@@ -1,5 +1,6 @@
 package aandrosov.city.app.ui.viewModels
 
+import aandrosov.city.app.ui.AppSettings
 import aandrosov.city.app.ui.states.WeatherScreenState
 import aandrosov.city.app.ui.states.toState
 import aandrosov.city.data.exceptions.DataInternetException
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class WeatherViewModel(
-    appViewModel: AppViewModel,
+    appSettings: AppSettings,
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(WeatherScreenState())
@@ -24,7 +25,7 @@ class WeatherViewModel(
 
     private var fetchingForecastJob: Job? = null
 
-    private val cityId = appViewModel.uiState.value.settings.cityId
+    val cityId = appSettings.cityId
 
     fun fetchForecast() {
         fetchingForecastJob?.cancel()

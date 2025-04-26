@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,14 +57,13 @@ fun EventsScreen(
     eventsViewModel: EventsViewModel = koinViewModel()
 ) {
     val uiState by eventsViewModel.uiState.collectAsState()
-    LaunchedEffect(Unit) { eventsViewModel.fetchEvents() }
 
     val bottomSheetState = rememberModalBottomSheetState(true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
-        onRefresh = { eventsViewModel.fetchEvents() },
+        onRefresh = eventsViewModel::fetchEvents,
         modifier = modifier.padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {

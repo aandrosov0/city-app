@@ -15,15 +15,16 @@ import org.koin.dsl.module
 
 val appModule = module {
     single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
-    single { AppViewModel(get()) }
+    singleOf(::AppSettings)
+    singleOf(::AppMemoryStorage)
 
+    viewModelOf(::AppViewModel)
     viewModelOf(::NewsViewModel)
     viewModelOf(::ArticleViewModel)
     viewModelOf(::WeatherViewModel)
-
-    viewModel { LoginViewModel(get()) }
-    viewModel { NewsViewModel(get()) }
-    viewModel { EventsViewModel(get(), get()) }
-    viewModel { TicketsViewModel(get(), get()) }
-    viewModel { MenuViewModel(get()) }
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::NewsViewModel)
+    viewModelOf(::EventsViewModel)
+    viewModelOf(::TicketsViewModel)
+    viewModelOf(::MenuViewModel)
 }

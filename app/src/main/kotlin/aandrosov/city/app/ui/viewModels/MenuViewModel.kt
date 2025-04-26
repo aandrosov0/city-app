@@ -1,40 +1,60 @@
 package aandrosov.city.app.ui.viewModels
 
+import aandrosov.city.app.ui.AppMemoryStorage
+import aandrosov.city.app.ui.AppSettings
 import aandrosov.city.app.ui.states.CityState
 import aandrosov.city.app.ui.states.MenuScreenState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class MenuViewModel(
-    private val appViewModel: AppViewModel
+    private val appSettings: AppSettings,
+    private val appMemoryStorage: AppMemoryStorage,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MenuScreenState())
     val uiState = _uiState.asStateFlow()
 
+    @Suppress("UNCHECKED_CAST")
+    val cities = appMemoryStorage[CITIES_MEMORY_KEY] as List<CityState>
+
     init {
-        viewModelScope.launch {
-            appViewModel.uiState.collect {
-                _uiState.value = MenuScreenState(
-                    currentCity = it.cities.find { city -> city.id  == it.settings.cityId } ?: CityState(),
-                    cities = it.cities,
-                    isDarkModeEnabled = it.settings.isDarkModeEnabled
-                )
-            }
-        }
+        _uiState.value = MenuScreenState(
+            currentCity = cities.find { city -> city.id  == appSettings.cityId } ?: CityState(),
+            cities = cities
+        )
+
+        appSettings.registerOnSettingsChangeListener(::onSettingsChanged)
     }
 
-    fun quit() = appViewModel.quitAccount()
+    fun quit() {
+        onCleared()
+        appSettings.update(cityId = 0)
+    }
 
     fun updateSettings(
         city: CityState = uiState.value.currentCity,
         isDarkModeEnabled: Boolean = uiState.value.isDarkModeEnabled,
     ) {
-        appViewModel.updateSettings(
+        if (appSettings.cityId != city.id) {
+            appMemoryStorage.clear()
+            appMemoryStorage[CITIES_MEMORY_KEY] = cities
+        }
+
+        appSettings.update(
             cityId = city.id,
             isDarkModeEnabled = isDarkModeEnabled
+        )
+    }
+
+    override fun onCleared() {
+        appSettings.unregisterOnSettingsChangeListener(::onSettingsChanged)
+    }
+
+    private fun onSettingsChanged() {
+        _uiState.value = uiState.value.copy(
+            currentCity = cities.find { it.id == appSettings.cityId }!!,
+            isDarkModeEnabled = appSettings.isDarkModeEnabled
         )
     }
 }

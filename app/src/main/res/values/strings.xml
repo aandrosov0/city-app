@@ -41,4 +41,8 @@
     <string name="weather_code_thunderstorm">Гроза</string>
     <string name="action_retry">Перезагрузить</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="favorite">Favorite</string>
+    <string name="category_all">Все</string>
+    <string name="category_favorite">Избранное</string>
+    <string name="empty_view_title">Здесь пока что пусто</string>
 </resources>
