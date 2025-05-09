@@ -1,7 +1,7 @@
 package aandrosov.city.app.ui.viewModels
 
-import aandrosov.city.app.ui.AppMemoryStorage
-import aandrosov.city.app.ui.AppSettings
+import aandrosov.city.app.AppMemoryStorage
+import aandrosov.city.app.AppSettings
 import aandrosov.city.app.ui.states.CategoryState
 import aandrosov.city.app.ui.states.NewsScreenState
 import aandrosov.city.app.ui.states.NewsState
@@ -45,7 +45,10 @@ class NewsViewModel(
         appSettings.registerOnSettingsChangeListener(::updateFavorites)
     }
 
-    fun fetchNews(category: CategoryState = CategoryState.ALL) {
+    fun fetchNews(
+        category: CategoryState = CategoryState.ALL,
+        searchableText: String? = null
+    ) {
         fetchingJob?.cancel()
         fetchingJob = viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(isLoading = true, category = category)
@@ -53,7 +56,7 @@ class NewsViewModel(
             val cityId = appSettings.cityId
             val newsRef = Firebase.firestore.collection("cities/$cityId/news")
 
-            val query = when (category.id) {
+            var query = when (category.id) {
                 CategoryState.FAVORITE.id  -> {
                     val favorites = appSettings.favoriteNews.toMutableList().apply {
                         add(-1)
@@ -79,10 +82,22 @@ class NewsViewModel(
             appMemoryStorage[CATEGORIES_MEMORY_KEY] = categories
             appMemoryStorage[CURRENT_CATEGORY_KEY] = category
 
-            _uiState.value = _uiState.value.copy(
-                categories = categories, news = news,
-                isLoading = false
-            )
+            _uiState.value = if (searchableText != null && searchableText.isNotBlank()) {
+                _uiState.value.copy(
+                    categories = categories,
+                    news = news.filter { news ->
+                        val regex = ".*${searchableText.lowercase()}.*".toRegex()
+                        news.title.lowercase().matches(regex)
+                    },
+                    isLoading = false
+                )
+            } else {
+                _uiState.value.copy(
+                    categories = categories, news = news,
+                    isLoading = false
+                )
+            }
+
             updateFavorites()
         }
     }

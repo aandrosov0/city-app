@@ -101,7 +101,6 @@ private fun HomeTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(8.dp)
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding(),
         verticalAlignment = Alignment.CenterVertically,

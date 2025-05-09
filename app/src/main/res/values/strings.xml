@@ -45,4 +45,5 @@
     <string name="category_all">Все</string>
     <string name="category_favorite">Избранное</string>
     <string name="empty_view_title">Здесь пока что пусто</string>
+    <string name="search_text_field_placeholder">Поиск…</string>
 </resources>

@@ -12,20 +12,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+
+data class FavoriteButtonColors(
+    val activeColor: Color,
+    val inactiveColor: Color,
+)
+
+object FavoriteButtonDefaults {
+    @Composable
+    fun colors(
+        activeColor: Color = MaterialTheme.colorScheme.primary,
+        inactiveColor: Color = MaterialTheme.colorScheme.onBackground
+    ) = FavoriteButtonColors(
+        activeColor = activeColor,
+        inactiveColor = inactiveColor
+    )
+}
 
 @Composable
 fun FavoriteButton(
     isFavorite: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    colors: FavoriteButtonColors = FavoriteButtonDefaults.colors()
 ) {
     val contentColor = if (isFavorite) {
-        MaterialTheme.colorScheme.primary
+        colors.activeColor
     } else {
-        MaterialTheme.colorScheme.onBackground
+        colors.inactiveColor
     }
 
     val iconId = if (isFavorite) {

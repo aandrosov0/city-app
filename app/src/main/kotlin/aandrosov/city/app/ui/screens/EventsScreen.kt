@@ -3,7 +3,13 @@ package aandrosov.city.app.ui.screens
 import aandrosov.city.app.R
 import aandrosov.city.app.redirectToBrowser
 import aandrosov.city.app.ui.components.ArticleRenderer
+import aandrosov.city.app.ui.components.EmptyView
+import aandrosov.city.app.ui.components.FavoriteButton
+import aandrosov.city.app.ui.components.FavoriteButtonDefaults
 import aandrosov.city.app.ui.components.FloatingPrice
+import aandrosov.city.app.ui.components.RowSelector
+import aandrosov.city.app.ui.states.CategoryState
+import aandrosov.city.app.ui.states.localizedTitle
 import aandrosov.city.app.ui.themes.AppTheme
 import aandrosov.city.app.ui.viewModels.EventsViewModel
 import androidx.compose.foundation.Image
@@ -40,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -57,13 +64,17 @@ fun EventsScreen(
     eventsViewModel: EventsViewModel = koinViewModel()
 ) {
     val uiState by eventsViewModel.uiState.collectAsState()
+    val categories = uiState.categories.toMutableList().also {
+        it.add(0, CategoryState.ALL)
+        it.add(1, CategoryState.FAVORITE)
+    }
 
     val bottomSheetState = rememberModalBottomSheetState(true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
-        onRefresh = eventsViewModel::fetchEvents,
+        onRefresh = { eventsViewModel.fetchEvents(uiState.category) },
         modifier = modifier.padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -73,6 +84,17 @@ fun EventsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            RowSelector(
+                current = uiState.category.localizedTitle,
+                items = categories.map { it.localizedTitle },
+                onItemSelect = {
+                    val category = categories[it]
+                    eventsViewModel.fetchEvents(category)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp)
+            )
             uiState.categories.forEach { category ->
                 val events = uiState.events.filter { it.categoryId == category.id }
                 if (events.isNotEmpty()) {
@@ -98,13 +120,18 @@ fun EventsScreen(
                                 onClick = {
                                     eventsViewModel.fetchEventContent(event.id, event.providerUrl)
                                     showBottomSheet = true
-                                }
+                                },
+                                isFavorite = event.isFavorite,
+                                onFavoriteClick = { eventsViewModel.toggleFavorite(event.id) }
                             )
                         }
                     }
                     Spacer(Modifier.height(4.dp))
                 }
             }
+        }
+        if (!uiState.isLoading && uiState.events.isEmpty()) {
+            EmptyView()
         }
     }
 
@@ -152,6 +179,8 @@ fun EventCard(
     price: String,
     date: String,
     onClick: () -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -172,6 +201,16 @@ fun EventCard(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(8.dp)
+            )
+            FavoriteButton(
+                isFavorite = isFavorite,
+                onClick = onFavoriteClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+                colors = FavoriteButtonDefaults.colors(
+                    inactiveColor = Color.White
+                )
             )
         }
         EventCardTitle(
@@ -233,6 +272,8 @@ private fun EventCardPreview() = AppTheme {
         thumbnail = painterResource(R.drawable.img_event_card_960_690),
         price = "от 400₽",
         date = "14 апреля",
-        onClick = {}
+        onClick = {},
+        isFavorite = false,
+        onFavoriteClick = {}
     )
 }

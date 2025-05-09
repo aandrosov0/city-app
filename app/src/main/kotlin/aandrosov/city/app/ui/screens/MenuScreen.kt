@@ -1,6 +1,7 @@
 package aandrosov.city.app.ui.screens
 
 import aandrosov.city.app.R
+import aandrosov.city.app.redirectToBrowser
 import aandrosov.city.app.ui.components.DropdownTextField
 import aandrosov.city.app.ui.components.DropdownTextFieldDefaults
 import aandrosov.city.app.ui.navigation.Weather
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,6 +48,7 @@ internal fun MenuScreen(
     menuViewModel: MenuViewModel = koinViewModel()
 ) {
     val uiState by menuViewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -78,7 +81,7 @@ internal fun MenuScreen(
         MenuButton(
             icon = painterResource(R.drawable.ic_info),
             label = stringResource(R.string.about_menu_button),
-            onClick = { },
+            onClick = { context.redirectToBrowser("https://challenge.braim.org/landing/app_contest") },
         )
         HorizontalDivider()
         MenuButton(

@@ -7,5 +7,6 @@ data class EventState(
     val imageUrl: String = "",
     val price: String = "",
     val date: String = "",
-    val providerUrl: String = ""
+    val providerUrl: String = "",
+    val isFavorite: Boolean = false,
 )

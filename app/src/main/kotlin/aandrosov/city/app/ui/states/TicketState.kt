@@ -6,5 +6,6 @@ data class TicketState(
     val title: String = "",
     val price: String = "",
     val imageUrl: String = "",
-    val providerUrl: String = ""
+    val providerUrl: String = "",
+    val isFavorite: Boolean = false
 )

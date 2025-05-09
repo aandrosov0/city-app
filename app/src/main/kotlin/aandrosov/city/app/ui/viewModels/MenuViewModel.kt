@@ -1,7 +1,7 @@
 package aandrosov.city.app.ui.viewModels
 
-import aandrosov.city.app.ui.AppMemoryStorage
-import aandrosov.city.app.ui.AppSettings
+import aandrosov.city.app.AppMemoryStorage
+import aandrosov.city.app.AppSettings
 import aandrosov.city.app.ui.states.CityState
 import aandrosov.city.app.ui.states.MenuScreenState
 import androidx.lifecycle.ViewModel

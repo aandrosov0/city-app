@@ -3,7 +3,12 @@ package aandrosov.city.app.ui.screens
 import aandrosov.city.app.R
 import aandrosov.city.app.redirectToBrowser
 import aandrosov.city.app.ui.components.ArticleRenderer
+import aandrosov.city.app.ui.components.EmptyView
+import aandrosov.city.app.ui.components.FavoriteButton
 import aandrosov.city.app.ui.components.FloatingPrice
+import aandrosov.city.app.ui.components.RowSelector
+import aandrosov.city.app.ui.states.CategoryState
+import aandrosov.city.app.ui.states.localizedTitle
 import aandrosov.city.app.ui.themes.AppTheme
 import aandrosov.city.app.ui.viewModels.TicketsViewModel
 import androidx.compose.foundation.Image
@@ -57,13 +62,17 @@ internal fun TicketsScreen(
     ticketsViewModel: TicketsViewModel = koinViewModel()
 ) {
     val uiState by ticketsViewModel.uiState.collectAsState()
+    val categories = uiState.categories.toMutableList().also {
+        it.add(0, CategoryState.ALL)
+        it.add(1, CategoryState.FAVORITE)
+    }
 
     val bottomSheetState = rememberModalBottomSheetState(true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     PullToRefreshBox(
         isRefreshing = uiState.isLoading,
-        onRefresh = ticketsViewModel::fetchTickets,
+        onRefresh = { ticketsViewModel.fetchTickets(uiState.category) },
         modifier = modifier.padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -73,6 +82,17 @@ internal fun TicketsScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            RowSelector(
+                current = uiState.category.localizedTitle,
+                items = categories.map { it.localizedTitle },
+                onItemSelect = {
+                    val category = categories[it]
+                    ticketsViewModel.fetchTickets(category)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp)
+            )
             uiState.categories.forEach { category ->
                 val events = uiState.tickets.filter { it.categoryId == category.id }
                 if (events.isNotEmpty()) {
@@ -95,7 +115,9 @@ internal fun TicketsScreen(
                                         ticket.providerUrl
                                     )
                                     showBottomSheet = true
-                                }
+                                },
+                                isFavorite = ticket.isFavorite,
+                                onFavoriteClick = { ticketsViewModel.toggleFavorite(ticket.id) }
                             )
                         }
                     }
@@ -134,6 +156,10 @@ internal fun TicketsScreen(
                 }
             }
         }
+
+        if (!uiState.isLoading && uiState.tickets.isEmpty()) {
+            EmptyView()
+        }
     }
 }
 
@@ -159,6 +185,8 @@ private fun TicketCard(
     thumbnail: Painter,
     price: String,
     onClick: () -> Unit,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -178,6 +206,13 @@ private fun TicketCard(
                 price = price,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
+                    .padding(8.dp)
+            )
+            FavoriteButton(
+                isFavorite = isFavorite,
+                onClick = onFavoriteClick,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
                     .padding(8.dp)
             )
         }
@@ -206,6 +241,8 @@ private fun TicketCardPreview() = AppTheme {
         title = "SPA-программы в салоне Sahar&Vosk",
         thumbnail = painterResource(R.drawable.img_event_card_960_690),
         price = "800р",
-        onClick = {}
+        onClick = {},
+        isFavorite = false,
+        onFavoriteClick = {}
     )
 }

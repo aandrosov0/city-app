@@ -1,6 +1,6 @@
 package aandrosov.city.app.ui.viewModels
 
-import aandrosov.city.app.ui.AppSettings
+import aandrosov.city.app.AppSettings
 import aandrosov.city.app.ui.navigation.Article
 import aandrosov.city.app.ui.states.ArticleScreenState
 import aandrosov.city.app.ui.states.toState

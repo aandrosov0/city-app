@@ -1,4 +1,4 @@
-package aandrosov.city.app.ui
+package aandrosov.city.app
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -12,6 +12,8 @@ class AppSettings(preferences: SharedPreferences) {
         private const val CITY_ID_KEY = "CITY_ID"
         private const val DARK_MODE_KEY = "DARK_MODE"
         private const val FAVORITE_NEWS_FORMAT_KEY = "FAVORITE_NEWS_OF_%d"
+        private const val FAVORITE_EVENTS_FORMAT_KEY = "FAVORITE_EVENTS_OF_%d"
+        private const val FAVORITE_TICKETS_FORMAT_KEY = "FAVORITE_TICKETS_OF_%d"
     }
 
     var cityId: Long = 0
@@ -21,6 +23,12 @@ class AppSettings(preferences: SharedPreferences) {
         private set
 
     var favoriteNews = emptySet<Long>()
+        private set
+
+    var favoriteEvents = emptySet<Long>()
+        private set
+
+    var favoriteTickets = emptySet<Long>()
         private set
 
     private val editor = preferences.edit()
@@ -48,7 +56,9 @@ class AppSettings(preferences: SharedPreferences) {
     fun update(
         cityId: Long = this.cityId,
         isDarkModeEnabled: Boolean = this.isDarkModeEnabled,
-        favoriteNews: Set<Long> = this.favoriteNews
+        favoriteNews: Set<Long> = this.favoriteNews,
+        favoriteEvents: Set<Long> = this.favoriteEvents,
+        favoriteTickets: Set<Long> = this.favoriteTickets
     ) {
         if (cityId != this.cityId) {
             editor.putLong(CITY_ID_KEY, cityId)
@@ -59,9 +69,18 @@ class AppSettings(preferences: SharedPreferences) {
         }
 
         if (favoriteNews != this.favoriteNews) {
-            val converted = favoriteNews.map(Long::toString).toSet()
             val formattedKey = FAVORITE_NEWS_FORMAT_KEY.format(cityId)
-            editor.putStringSet(formattedKey, converted)
+            editor.putNumberSet(formattedKey, favoriteNews)
+        }
+
+        if (favoriteEvents != this.favoriteNews) {
+            val formattedKey = FAVORITE_EVENTS_FORMAT_KEY.format(cityId)
+            editor.putNumberSet(formattedKey, favoriteEvents)
+        }
+
+        if (favoriteTickets != this.favoriteTickets) {
+            val formattedKey = FAVORITE_TICKETS_FORMAT_KEY.format(cityId)
+            editor.putNumberSet(formattedKey, favoriteTickets)
         }
 
         editor.apply()
@@ -72,9 +91,31 @@ class AppSettings(preferences: SharedPreferences) {
         isDarkModeEnabled = preferences.getBoolean(DARK_MODE_KEY, false)
 
         val formattedNewsKey = FAVORITE_NEWS_FORMAT_KEY.format(cityId)
-        val newsIds = preferences.getStringSet(formattedNewsKey, emptySet())!!
-        favoriteNews = newsIds.map(String::toLong).toSet()
+        favoriteNews = preferences.getLongSet(formattedNewsKey, emptySet())!!
+
+        val formattedEventsKey = FAVORITE_EVENTS_FORMAT_KEY.format(cityId)
+        favoriteEvents = preferences.getLongSet(formattedEventsKey, emptySet())!!
+
+        val formattedTicketsKey = FAVORITE_TICKETS_FORMAT_KEY.format(cityId)
+        favoriteTickets = preferences.getLongSet(formattedTicketsKey, emptySet())!!
 
         listeners.forEach(OnSettingsChangeListener::onSettingsChanged)
+    }
+
+    private fun SharedPreferences.Editor.putNumberSet(key: String, values: Set<Number>?) {
+        val converted = values?.map(Number::toString)?.toSet()
+        putStringSet(key, converted)
+    }
+
+    private fun SharedPreferences.getLongSet(key: String, defValues: Set<Long>?): Set<Long>? {
+        val stringSet = getStringSet(key, emptySet())!!
+
+        val longSet = if (stringSet.isEmpty()) {
+            defValues
+        } else {
+            stringSet.map(String::toLong).toSet()
+        }
+
+        return longSet
     }
 }

@@ -6,4 +6,5 @@ data class TicketsScreenState(
     val categories: List<CategoryState> = emptyList(),
     val ticketContent: TicketContentState = TicketContentState(),
     val isError: Boolean = false,
+    val category: CategoryState = CategoryState.ALL
 )

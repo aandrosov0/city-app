@@ -1,6 +1,6 @@
 package aandrosov.city.app.ui.viewModels
 
-import aandrosov.city.app.ui.AppSettings
+import aandrosov.city.app.AppSettings
 import aandrosov.city.app.ui.states.WeatherScreenState
 import aandrosov.city.app.ui.states.toState
 import aandrosov.city.data.exceptions.DataInternetException
