@@ -122,6 +122,10 @@ class EventsViewModel(
         appSettings.update(favoriteEvents = ids)
     }
 
+    override fun onCleared() {
+        appSettings.unregisterOnSettingsChangeListener(::updateFavorites)
+    }
+
     @Suppress("UNCHECKED_CAST")
     private fun loadCache(): Boolean {
         val events = appMemoryStorage[EVENTS_MEMORY_KEY] as? List<EventState>

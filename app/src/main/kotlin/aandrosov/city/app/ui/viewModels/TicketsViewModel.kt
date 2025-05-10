@@ -45,6 +45,8 @@ class TicketsViewModel(
         if (!isCacheLoaded) {
             fetchTickets()
         }
+
+        appSettings.registerOnSettingsChangeListener(::updateFavorites)
     }
 
     fun fetchTickets(category: CategoryState = CategoryState.ALL) {
@@ -115,7 +117,13 @@ class TicketsViewModel(
             ids.add(ticketId)
         }
 
+        println(ids)
+
         appSettings.update(favoriteTickets = ids)
+    }
+
+    override fun onCleared() {
+        appSettings.unregisterOnSettingsChangeListener(::updateFavorites)
     }
 
     @Suppress("UNCHECKED_CAST")
