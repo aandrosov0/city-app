@@ -3,6 +3,7 @@ package aandrosov.city.app.ui.screens
 import aandrosov.city.app.R
 import aandrosov.city.app.redirectToBrowser
 import aandrosov.city.app.ui.components.ArticleRenderer
+import aandrosov.city.app.ui.components.DynamicAdvertisingBanners
 import aandrosov.city.app.ui.components.EmptyView
 import aandrosov.city.app.ui.components.FavoriteButton
 import aandrosov.city.app.ui.components.FloatingPrice
@@ -93,6 +94,7 @@ internal fun TicketsScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)
             )
+            DynamicAdvertisingBanners()
             uiState.categories.forEach { category ->
                 val events = uiState.tickets.filter { it.categoryId == category.id }
                 if (events.isNotEmpty()) {
