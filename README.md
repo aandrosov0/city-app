@@ -14,4 +14,8 @@ This application was implemented using following tools:
 - Kotlinx Serialization
 - Firebase
 ## 🎦 Demonstration 
-![](app-presentation.mp4)
+
+
+https://github.com/user-attachments/assets/31a281af-fae3-4591-af99-23a02b17e643
+
+
